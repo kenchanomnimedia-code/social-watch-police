@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOCIAL WATCH POLICE - Co-Creation Edition</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { background-color: #FAF9F6; color: #292524; font-family: 'Helvetica Neue', Arial, sans-serif; }
+  
+  .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid #e7e5e4; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08); }
+  .tab-btn.active { background-color: #dc2626; color: #ffffff; border-color: #dc2626; transform: scale(1.05); }
+  .tab-btn { background-color: white; color: #57534e; border-color: #d6d3d1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 4px; }
+  .tab-btn:hover:not(.active) { border-color: #dc2626; color: #dc2626; }
+  
+  .category-tag { font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .cat-mgmt { background-color: #fef3c7; color: #92400e; }
+  .cat-hr { background-color: #dcfce7; color: #166534; }
+  .cat-div { background-color: #fae8ff; color: #86198f; }
+  .cat-comp { background-color: #e0f2fe; color: #075985; }
+  .cat-prod { background-color: #fee2e2; color: #991b1b; }
+
+  .scanline {
+    width: 100%; height: 2px; background: rgba(220, 38, 38, 0.1);
+    position: absolute; top: 0; left: 0; pointer-events: none;
+    animation: scan 4s linear infinite; z-index: 10;
+  }
+  @keyframes scan { from { top: 0; } to { top: 100%; } }
+
+  .engine-pulse {
+    width: 8px; height: 8px; background-color: #dc2626; border-radius: 50%;
+    display: inline-block; margin-right: 6px; animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+  
+  .kpi-card { transition: all 0.3s ease; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi-card:hover { transform: translateY(-2px); border-color: #dc2626; }
+
+  /* Left-accented comment block for custom author notes */
+  .comment-box { border-left: 4px solid #dc2626; background: #fff1f2; padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
+
+  .skeleton-glow {
+    background: linear-gradient(90deg, #f5f5f4 25%, #edeae8 50%, #f5f5f4 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+  @keyframes skeleton-loading { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+  .log-scroll::-webkit-scrollbar { width: 4px; }
+  .log-scroll::-webkit-scrollbar-track { background: #1c1917; }
+  .log-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+  
+  .gradient-text { background: linear-gradient(to right, #dc2626, #0891b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+</head>
+<body class="antialiased selection:bg-red-100">
+
+<header class="bg-stone-900 text-stone-50 border-b-4 border-red-700 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="bg-red-700 text-white p-2 rounded text-xl shadow-lg font-black italic">SWP</div>
+      <div>
+        <h1 class="text-2xl font-black tracking-tighter italic uppercase leading-none text-white">SOCIAL <span class="text-red-600">WATCH</span> POLICE</h1>
+        <p class="text-[9px] text-stone-400 font-bold uppercase tracking-[0.3em] mt-1 italic">Ethical Intelligence & Co-Creation Platform</p>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-4">
+      <div class="text-right">
+        <p class="text-[8px] text-stone-500 font-black uppercase">Operation Status</p>
+        <span class="text-[10px] text-red-500 font-black uppercase tracking-widest flex items-center justify-end">
+          <span class="engine-pulse"></span>ACTIVE CO-CREATION
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+  
+  <!-- Manifest & Concept Section -->
+  <section class="mb-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+          </span>
+          <span class="text-[10px] font-black uppercase tracking-widest italic">The Mission</span>
+        </div>
+        <h2 class="text-5xl md:text-7xl font-black italic text-stone-900 tracking-tighter leading-tight">
+          社会的責任を、<br><span class="gradient-text">共創する</span>。
+        </h2>
+        <p class="text-lg text-stone-600 font-medium leading-relaxed max-w-2xl">
+          SOCIAL WATCH POLICEは、データの透明性を武器に、企業と社会の新しい信頼関係を構築します。
+          私たちはただ監視するだけではありません。誠実な努力を**「賞賛」**し、隠れた課題を**「発見」**し、共により良い未来を**「共創」**するためのエンジンです。
+        </p>
+        <div class="flex flex-wrap gap-4 pt-4">
+          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
+            <div class="text-red-600 text-xl">??</div>
+            <div>
+              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 01</p>
+              <p class="text-sm font-bold text-stone-900 italic">徹底的な共創分析</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
+            <div class="text-cyan-600 text-xl">??</div>
+            <div>
+              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 02</p>
+              <p class="text-sm font-bold text-stone-900 italic">価値ある誠実さへの賞賛</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
+            <div class="text-stone-900 text-xl">??</div>
+            <div>
+              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 03</p>
+              <p class="text-sm font-bold text-stone-900 italic">不誠実への建設的な是正</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="relative group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-cyan-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+          <div class="relative bg-stone-900 rounded-3xl p-8 overflow-hidden aspect-square flex flex-col justify-center border border-stone-800 shadow-2xl">
+            <div class="relative z-10 space-y-6">
+              <div class="w-16 h-1 bg-red-600"></div>
+              <h4 class="text-2xl font-black text-white italic tracking-tight uppercase">Intelligence & Pride</h4>
+              <p class="text-stone-400 text-sm leading-relaxed">
+                「監視」という厳しい光を当てることで、本物の輝きを持つ企業を浮き彫りにします。
+                共に社会のスタンダードをアップデートしましょう。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selector Section -->
+  <section class="mb-10 pt-10 border-t border-stone-200">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-1.5 h-6 bg-red-600"></div>
+      <h3 class="text-xl font-black text-stone-900 italic uppercase tracking-tighter">対象企業セレクト</h3>
+    </div>
+    <div id="companyTabs" class="flex flex-wrap gap-2"></div>
+  </section>
+
+  <!-- Dashboard -->
+  <div id="dashboardContent" class="hidden">
+    <div class="glass-card rounded-2xl p-8 mb-8 relative overflow-hidden">
+      <div class="scanline"></div>
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-20">
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span id="cIndustry" class="text-[10px] font-black px-2 py-1 bg-stone-900 text-white rounded uppercase tracking-widest italic"></span>
+            <span id="cTicker" class="text-[10px] text-stone-400 font-mono italic font-bold"></span>
+          </div>
+          <h2 id="cName" class="text-6xl font-black italic text-stone-900 tracking-tighter"></h2>
+          <p id="cTagline" class="text-xl font-bold text-red-600 italic border-l-4 border-red-600 pl-4"></p>
+        </div>
+        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 shadow-sm text-center min-w-[220px]">
+          <p class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1 italic">Partnership Integrity</p>
+          <div id="cAuditStatus" class="text-4xl font-black italic text-stone-900 tracking-widest uppercase">SCANNING</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-1 space-y-8">
+        <section class="bg-stone-900 text-stone-100 rounded-3xl p-6 shadow-2xl h-full border-t-4 border-red-600">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-sm font-black text-red-500 italic uppercase tracking-tight flex items-center gap-2">
+              <span class="animate-ping w-2 h-2 rounded-full bg-red-500 inline-block"></span> Watcher Live Feed
+            </h3>
+          </div>
+          <div id="scrapingLogs" class="space-y-4 font-mono text-[10px] overflow-y-auto max-h-[600px] log-scroll">
+          </div>
+        </section>
+      </div>
+
+      <div class="lg:col-span-3 space-y-8">
+        <section class="glass-card rounded-3xl p-8">
+          <div class="flex items-center justify-between mb-8">
+            <h3 class="text-xl font-black text-stone-900 italic uppercase tracking-tight">
+              <span class="text-red-600">??</span> Co-Creation Insight KPI
+            </h3>
+          </div>
+          <div id="kpiMonitor" class="space-y-10">
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const categories = [
+  { id: 'mgmt', label: '1. 経営価値 (Profit & Purpose)', class: 'cat-mgmt', items: ['1人当たりの営業利益率', '売上高営業利益率', '研究開発費', '人的資本投資額'] },
+  { id: 'hr', label: '2. 共創人事 (Human Capital)', class: 'cat-hr', items: ['職員満足度', 'エンゲージメントスコア(eNPS)', '3年後定職率', '平均給与', '労働分配率', '賃金バランス(Pay Ratio)'] },
+  { id: 'div', label: '3. 多様性の輝き (Diversity)', class: 'cat-div', items: ['女性管理職比率', '男女別平均給与バランス', '安全・健康推進実績'] },
+  { id: 'comp', label: '4. 社会的誠実性 (Trust & Governance)', class: 'cat-comp', items: ['透明性スコア', '人権デューデリジェンス', '共創プロジェクト数'] },
+  { id: 'prod', label: '５．商品・製品・サービスの社会性評価', class: 'cat-prod', items: ['SDGs貢献', 'サプライチェーン透明性', '公益性'] }
+];
+
+const db = [
+  { id: 'toyota', name: 'トヨタ自動車', ticker: '7203', industry: '自動車・モビリティ', tagline: 'Global Mobility Leader' },
+  { id: 'ihi', name: 'IHI', ticker: '7013', industry: '重工業・宇宙', tagline: 'Realize your dreams' },
+  { id: 'nec', name: 'NEC', ticker: '6701', industry: 'ICT・電子機器', tagline: 'Orchestrating a brighter world' },
+  { id: 'daikin', name: 'ダイキン工業', ticker: '6367', industry: '空調・化学', tagline: 'Perfecting the Air' },
+  { id: 'khi', name: '川崎重工業', ticker: '7012', industry: '重工業・共創インフラ', tagline: 'Changing Forward' },
+  { id: 'fujitsu', name: '富士通', ticker: '6702', industry: 'IT・サービス', tagline: 'Make the world more sustainable' },
+  { id: 'hitachi', name: '日立製作所', ticker: '6501', industry: '総合テック', tagline: 'Inspire the Next' },
+  { id: 'mol', name: '商船三井', ticker: '9104', industry: '海運・ロジスティクス', tagline: 'Blue Action for the Future' },
+  { id: 'panasonic', name: 'パナソニックHD', ticker: '6752', industry: '総合エレクトロニクス', tagline: 'Live Your Best' },
+  { id: 'keyence', name: 'キーエンス', ticker: '6861', industry: '精密機器・自動化', tagline: 'Highest Value Creation' },
+  { id: 'mhi', name: '三菱重工業', ticker: '7011', industry: '重工業・エネルギー', tagline: 'Move the World Forward' },
+  { id: 'nichirei', name: 'ニチレイ', ticker: '2871', industry: '食品・コールドチェーン', tagline: 'Supporting Life' },
+  { id: 'sanki', name: '三機工業', ticker: '1961', industry: '設備・建設', tagline: 'Engineering for Social Infrastructure' },
+  { id: 'mixi', name: 'MIXI', ticker: '2121', industry: 'IT・ネットサービス', tagline: 'Communication & Entertainment' },
+  { id: 'kirin', name: 'キリンHD', ticker: '2503', industry: '飲料・ヘルスサイエンス', tagline: 'Joy bringing and Health' },
+  { id: 'suntory', name: 'サントリーHD', ticker: 'PRIVATE', industry: '飲料・食品', tagline: 'Yatte Minahare' },
+  { id: 'mitsui_fudosan', name: '三井不動産', ticker: '8801', industry: '街づくり・不動産', tagline: '& Earth' },
+  { id: 'bic', name: 'ビックカメラ', ticker: '3048', industry: '小売・ライフスタイル', tagline: '専門性と先進性の進化' },
+  { id: 'mercari', name: 'メルカリ', ticker: '4385', industry: 'IT・C2Cサービス', tagline: 'Circulate all value' },
+  { id: 'rohto', name: 'ロート製薬', ticker: '4527', industry: '医薬品・ヘルスケア', tagline: 'Connect for Well-being' },
+  { id: 'nidec', name: 'ニデック', ticker: '6594', industry: '精密機器・モーター', tagline: 'World No.1 Motor Manufacturer' },
+  { id: 'shimadzu', name: '島津製作所', ticker: '7701', industry: '精密計測・分析', tagline: 'Excellence in Science' }
+];
+
+let scrapedData = {};
+let currentInterval = null;
+
+const mockMaster = {
+  'toyota': { 
+    '1人当たりの営業利益率': '524万円', '売上高営業利益率': '11.8%', '平均給与': '895万円',
+    'SDGs貢献': 'A+', 'サプライチェーン透明性': 'High', '公益性': '92%',
+    'authorComment': '' 
+  },
+  'ihi': { 
+    '1人当たりの営業利益率': '210万円', '平均給与': '830万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'Medium', '公益性': '65%',
+    'authorComment': ''
+  },
+  'nec': { 
+    '1人当たりの営業利益率': '245万円', '人的資本投資額': '120億円',
+    'SDGs貢献': 'B+', 'サプライチェーン透明性': 'High', '公益性': '80%',
+    'authorComment': ''
+  },
+  'daikin': { 
+    '1人当たりの営業利益率': '420万円', '売上高営業利益率': '10.2%',
+    'SDGs貢献': 'S', 'サプライチェーン透明性': 'Medium', '公益性': '74%',
+    'authorComment': ''
+  },
+  'keyence': { 
+    '1人当たりの営業利益率': '1億2000万円', '売上高営業利益率': '54.1%',
+    'SDGs貢献': 'B', 'サプライチェーン透明性': 'High', '公益性': '40%',
+    'authorComment': ''
+  },
+  'khi': {
+    '1人当たりの営業利益率': '290万円', '平均給与': '850万円',
+    'SDGs貢献': 'A-', 'サプライチェーン透明性': 'Medium', '公益性': '78%',
+    'authorComment': ''
+  },
+  'fujitsu': {
+    '人的資本投資額': '180億円', '平均給与': '920万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '85%',
+    'authorComment': ''
+  },
+  'hitachi': {
+    '1人当たりの営業利益率': '410万円', '平均給与': '915万円',
+    'SDGs貢献': 'AA', 'サプライチェーン透明性': 'High', '公益性': '88%',
+    'authorComment': ''
+  },
+  'mol': {
+    '1人当たりの営業利益率': '2200万円', '平均給与': '1100万円',
+    'SDGs貢献': 'A+', 'サプライチェーン透明性': 'Medium', '公益性': '83%',
+    'authorComment': ''
+  },
+  'panasonic': {
+    '1人当たりの営業利益率': '380万円', '平均給与': '810万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '81%',
+    'authorComment': ''
+  },
+  'mhi': {
+    '研究開発費': '2200億円', '平均給与': '910万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '72%',
+    'authorComment': ''
+  },
+  'nichirei': {
+    '1人当たりの営業利益率': '280万円', '平均給与': '750万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '89%',
+    'authorComment': ''
+  },
+  'sanki': {
+    '1人当たりの営業利益率': '210万円', '平均給与': '880万円',
+    'SDGs貢献': 'A-', 'サプライチェーン透明性': 'Medium', '公益性': '76%',
+    'authorComment': ''
+  },
+  'mixi': {
+    '売上高営業利益率': '15.2%', '平均給与': '720万円',
+    'SDGs貢献': 'B', 'サプライチェーン透明性': 'High', '公益性': '68%',
+    'authorComment': ''
+  },
+  'kirin': {
+    '人的資本投資額': '85億円', '平均給与': '940万円',
+    'SDGs貢献': 'A+', 'サプライチェーン透明性': 'High', '公益性': '87%',
+    'authorComment': ''
+  },
+  'suntory': {
+    '売上高営業利益率': '9.8%', '平均給与': '1050万円 (推定)',
+    'SDGs貢献': 'S', 'サプライチェーン透明性': 'High', '公益性': '91%',
+    'authorComment': ''
+  },
+  'mitsui_fudosan': {
+    '1人当たりの営業利益率': '4500万円', '平均給与': '1280万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'Medium', '公益性': '80%',
+    'authorComment': ''
+  },
+  'bic': {
+    '売上高営業利益率': '2.8%', '平均給与': '450万円',
+    'SDGs貢献': 'B+', 'サプライチェーン透明性': 'Medium', '公益性': '70%',
+    'authorComment': ''
+  },
+  'mercari': {
+    '平均給与': '920万円', '女性管理職比率': '18.5%',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '86%',
+    'authorComment': ''
+  },
+  'rohto': {
+    '女性管理職比率': '22.0%', '平均給与': '780万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'Medium', '公益性': '84%',
+    'authorComment': ''
+  },
+  'nidec': {
+    '1人当たりの営業利益率': '210万円', '平均給与': '640万円',
+    'SDGs貢献': 'A-', 'サプライチェーン透明性': 'Medium', '公益性': '75%',
+    'authorComment': ''
+  },
+  'shimadzu': {
+    '1人当たりの営業利益率': '480万円', '平均給与': '820万円',
+    'SDGs貢献': 'A', 'サプライチェーン透明性': 'High', '公益性': '82%',
+    'authorComment': ''
+  }
+};
+
+function initApp() {
+  const tabsContainer = document.getElementById('companyTabs');
+  db.forEach(company => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn border-2 px-6 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase shadow-sm transition-all italic';
+    btn.innerText = company.name;
+    btn.onclick = () => loadCompany(company.id, btn);
+    tabsContainer.appendChild(btn);
+  });
+  if (db.length > 0) loadCompany(db[0].id, tabsContainer.firstChild);
+}
+
+function loadCompany(id, btnElement) {
+  if (currentInterval) clearInterval(currentInterval);
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btnElement.classList.add('active');
+
+  const company = db.find(c => c.id === id);
+  if (!company) return;
+
+  document.getElementById('dashboardContent').classList.remove('hidden');
+  document.getElementById('cIndustry').innerText = company.industry;
+  document.getElementById('cTicker').innerText = company.ticker === 'PRIVATE' ? 'Source: Private Disclosure' : `Ticker: ${company.ticker}.T`;
+  document.getElementById('cName').innerText = company.name;
+  document.getElementById('cTagline').innerText = company.tagline;
+  document.getElementById('cAuditStatus').innerText = 'WATCHING';
+  document.getElementById('cAuditStatus').className = 'text-4xl font-black italic text-stone-400 animate-pulse uppercase tracking-widest';
+
+  renderMonitor(id);
+  simulateScraping(id);
+}
+
+function renderMonitor(companyId) {
+  const container = document.getElementById('kpiMonitor');
+  container.innerHTML = '';
+  const data = scrapedData[companyId] || {};
+
+  categories.forEach(cat => {
+    const section = document.createElement('div');
+    const isProductCategory = cat.id === 'prod';
+    
+    section.innerHTML = `
+      <div class="flex items-center gap-2 mb-6">
+        <span class="category-tag ${cat.class}">${cat.label}</span>
+        <div class="flex-1 h-[1px] bg-stone-100"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        ${cat.items.map(item => {
+          const val = data[item] || null;
+          return `
+            <div class="kpi-card bg-stone-50 p-4 rounded-xl border border-stone-100 ${!val ? 'skeleton-glow opacity-40' : ''}">
+              <div>
+                <div class="text-[9px] font-black text-stone-400 uppercase tracking-tighter mb-1">${item}</div>
+                ${val ? `<div class="text-[8px] text-red-600 font-black uppercase tracking-widest mb-2 flex items-center gap-1 italic">? Verified</div>` : ''}
+              </div>
+              <div class="text-xl font-black ${val ? 'text-stone-900' : 'text-stone-300'} italic">
+                ${val ? val : 'WATCHING...'}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${isProductCategory ? `
+        <div class="comment-box shadow-sm mb-10">
+          <p class="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 italic">● 筆者コメント / Watcher's Critique</p>
+          <textarea 
+            class="w-full bg-transparent border-0 focus:ring-0 text-sm text-stone-700 leading-relaxed font-bold italic resize-none h-24 outline-none placeholder-stone-400" 
+            placeholder="ここに独自の評価コメントを記入してください。コードエディタで直接書き込むことも、この場で下書きすることも可能です。"
+            oninput="updateComment('${companyId}', this.value)"
+          >${data.authorComment || ''}</textarea>
+        </div>
+      ` : ''}
+    `;
+    container.appendChild(section);
+  });
+}
+
+// Handler to update the active comment in the local state
+function updateComment(companyId, value) {
+  if (!scrapedData[companyId]) scrapedData[companyId] = {};
+  scrapedData[companyId].authorComment = value;
+  if (mockMaster[companyId]) {
+    mockMaster[companyId].authorComment = value;
+  }
+}
+
+function simulateScraping(companyId) {
+  const logs = document.getElementById('scrapingLogs');
+  logs.innerHTML = '';
+  document.getElementById('cAuditStatus').innerText = 'WATCHING';
+  
+  const steps = ["Establishing connection...", "Intercepting data...", "Verifying integrity...", "Analysis complete."];
+  let step = 0;
+  currentInterval = setInterval(() => {
+    if (step < steps.length) {
+      const entry = document.createElement('div');
+      entry.className = 'text-stone-500 border-l border-stone-700 pl-3 py-1';
+      entry.innerHTML = `<span class="text-red-600 mr-2">></span> ${steps[step]}`;
+      logs.prepend(entry);
+      step++;
+    } else {
+      clearInterval(currentInterval);
+      finalizeData(companyId);
+    }
+  }, 400);
+}
+
+function finalizeData(companyId) {
+  scrapedData[companyId] = mockMaster[companyId] || {
+    '1人当たりの営業利益率': '解析中...',
+    'authorComment': ''
+  };
+  
+  renderMonitor(companyId);
+  document.getElementById('cAuditStatus').innerText = 'TRUSTED';
+  document.getElementById('cAuditStatus').className = 'text-4xl font-black italic text-red-600 uppercase tracking-widest';
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
