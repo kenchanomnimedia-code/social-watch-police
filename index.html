@@ -3,352 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOCIAL WATCH POLICE - Co-Creation Edition</title>
+<title>SOCIAL WATCH POLICE - 日本企業分析エディション</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   body { background-color: #FAF9F6; color: #292524; font-family: 'Helvetica Neue', Arial, sans-serif; }
-  
-  .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid #e7e5e4; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08); }
-  .tab-btn.active { background-color: #dc2626; color: #ffffff; border-color: #dc2626; transform: scale(1.05); }
-  .tab-btn { background-color: white; color: #57534e; border-color: #d6d3d1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 4px; }
-  .tab-btn:hover:not(.active) { border-color: #dc2626; color: #dc2626; }
-  
-  .category-tag { font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
-  .cat-mgmt { background-color: #fef3c7; color: #92400e; }
-  .cat-hr { background-color: #dcfce7; color: #166534; }
-  .cat-div { background-color: #fae8ff; color: #86198f; }
-  .cat-comp { background-color: #e0f2fe; color: #075985; }
-  .cat-prod { background-color: #fee2e2; color: #991b1b; }
-
-  .scanline {
-    width: 100%; height: 2px; background: rgba(220, 38, 38, 0.1);
-    position: absolute; top: 0; left: 0; pointer-events: none;
-    animation: scan 4s linear infinite; z-index: 10;
-  }
-  @keyframes scan { from { top: 0; } to { top: 100%; } }
-
-  .engine-pulse {
-    width: 8px; height: 8px; background-color: #dc2626; border-radius: 50%;
-    display: inline-block; margin-right: 6px; animation: pulse 1.5s infinite;
-  }
-  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
-  
-  .kpi-card { transition: all 0.3s ease; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
-  .kpi-card:hover { transform: translateY(-2px); border-color: #dc2626; }
-
-  /* Left-accented comment block for custom author notes */
-  .comment-box { border-left: 4px solid #dc2626; background: #fff1f2; padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
-
-  .skeleton-glow {
-    background: linear-gradient(90deg, #f5f5f4 25%, #edeae8 50%, #f5f5f4 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1.5s infinite;
-  }
-  @keyframes skeleton-loading { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-
-  .log-scroll::-webkit-scrollbar { width: 4px; }
-  .log-scroll::-webkit-scrollbar-track { background: #1c1917; }
-  .log-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
-  
-  .gradient-text { background: linear-gradient(to right, #dc2626, #0891b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 450px; }
+  @media (min-width: 768px) { .chart-container { height: 400px; } }
+  .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid #e7e5e4; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+  .tab-btn.active { background-color: #1c1917; color: #ffffff; border-color: #1c1917; transform: translateY(-2px); }
+  .tab-btn { background-color: white; color: #57534e; border-color: #d6d3d1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .status-good { color: #059669; background-color: #d1fae5; }
+  .status-bad { color: #e11d48; background-color: #ffe4e6; }
+  .status-neutral { color: #57534e; background-color: #f5f5f4; }
+  .police-gradient { background: linear-gradient(135deg, #1c1917 0%, #44403c 100%); }
 </style>
 </head>
-<body class="antialiased selection:bg-red-100">
+<body class="antialiased selection:bg-rose-200">
 
-<header class="bg-stone-900 text-stone-50 border-b-4 border-red-700 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+<header class="police-gradient text-stone-50 border-b-4 border-rose-700 sticky top-0 z-50 shadow-2xl">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
     <div class="flex items-center gap-4">
-      <div class="bg-red-700 text-white p-2 rounded text-xl shadow-lg font-black italic">SWP</div>
+      <div class="bg-rose-700 text-white p-2.5 rounded shadow-lg text-2xl font-serif">WP</div>
       <div>
-        <h1 class="text-2xl font-black tracking-tighter italic uppercase leading-none text-white">SOCIAL <span class="text-red-600">WATCH</span> POLICE</h1>
-        <p class="text-[9px] text-stone-400 font-bold uppercase tracking-[0.3em] mt-1 italic">Ethical Intelligence & Co-Creation Platform</p>
+        <h1 class="text-2xl font-black tracking-tighter italic uppercase leading-none">SOCIAL WATCH <span class="text-rose-500">POLICE</span></h1>
+        <p class="text-[9px] text-stone-400 font-bold uppercase tracking-[0.4em] mt-1">Institutional Intelligence Database</p>
       </div>
     </div>
-    <div class="hidden md:flex items-center gap-4">
-      <div class="text-right">
-        <p class="text-[8px] text-stone-500 font-black uppercase">Operation Status</p>
-        <span class="text-[10px] text-red-500 font-black uppercase tracking-widest flex items-center justify-end">
-          <span class="engine-pulse"></span>ACTIVE CO-CREATION
-        </span>
+    <div class="flex items-center gap-6">
+      <div class="text-right hidden md:block">
+        <p class="text-[10px] text-stone-400 font-bold uppercase">Status</p>
+        <p class="text-xs font-black text-rose-500">LIVE SURVEILLANCE</p>
       </div>
+      <div class="h-10 w-[1px] bg-stone-700 hidden md:block"></div>
+      <div class="text-xs font-bold text-stone-300">Target: Major JP Enterprises</div>
     </div>
   </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-6 py-8">
-  
-  <!-- Manifest & Concept Section -->
-  <section class="mb-16">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-      <div class="lg:col-span-7 space-y-6">
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-          </span>
-          <span class="text-[10px] font-black uppercase tracking-widest italic">The Mission</span>
-        </div>
-        <h2 class="text-5xl md:text-7xl font-black italic text-stone-900 tracking-tighter leading-tight">
-           Љ I ӔC  A<br><span class="gradient-text">   n    </span> B
-        </h2>
-        <p class="text-lg text-stone-600 font-medium leading-relaxed max-w-2xl">
-          SOCIAL WATCH POLICE ́A f [ ^ ̓      𕐊 ɁA  ƂƎЉ ̐V     M   ֌W  \ z   ܂  B
-                 ͂    Ď    邾   ł͂   ܂   B     ȓw ͂ ** u ܎^ v**   A B ꂽ ۑ  ** u     v**   A   ɂ  ǂ       ** u   n v**   邽 ߂̃G   W   ł  B
-        </p>
-        <div class="flex flex-wrap gap-4 pt-4">
-          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
-            <div class="text-red-600 text-xl">??</div>
-            <div>
-              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 01</p>
-              <p class="text-sm font-bold text-stone-900 italic"> O  I ȋ  n    </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
-            <div class="text-cyan-600 text-xl">??</div>
-            <div>
-              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 02</p>
-              <p class="text-sm font-bold text-stone-900 italic">   l   鐽     ւ̏܎^</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 bg-white border border-stone-200 px-4 py-3 rounded-2xl shadow-sm">
-            <div class="text-stone-900 text-xl">??</div>
-            <div>
-              <p class="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Action 03</p>
-              <p class="text-sm font-bold text-stone-900 italic"> s     ւ̌  ݓI Ȑ   </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="lg:col-span-5">
-        <div class="relative group">
-          <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-cyan-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-          <div class="relative bg-stone-900 rounded-3xl p-8 overflow-hidden aspect-square flex flex-col justify-center border border-stone-800 shadow-2xl">
-            <div class="relative z-10 space-y-6">
-              <div class="w-16 h-1 bg-red-600"></div>
-              <h4 class="text-2xl font-black text-white italic tracking-tight uppercase">Intelligence & Pride</h4>
-              <p class="text-stone-400 text-sm leading-relaxed">
-                 u Ď  v Ƃ            𓖂Ă邱 ƂŁA {   ̋P       Ƃ𕂂     ɂ  ܂  B
-                   ɎЉ ̃X ^   _ [ h  A b v f [ g   ܂  傤 B
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <section class="mb-12 border-l-4 border-rose-600 pl-6 py-2">
+    <h2 class="text-3xl font-black tracking-tighter mb-2 text-stone-800 italic uppercase">Neo-SDGs Strategy Analysis</h2>
+    <p class="text-stone-500 text-sm font-medium leading-relaxed max-w-3xl">
+      トヨタ、NIDEC、島津、ロート。業種も歴史も異なる4社を「真の社会マネジメント」の観点から解剖します。表層的なIR資料の言葉を超え、人的資本への投資実態と、目標達成に向けた誠実性をデータから検証してください。
+    </p>
   </section>
 
-  <!-- Selector Section -->
-  <section class="mb-10 pt-10 border-t border-stone-200">
-    <div class="flex items-center gap-3 mb-6">
-      <div class="w-1.5 h-6 bg-red-600"></div>
-      <h3 class="text-xl font-black text-stone-900 italic uppercase tracking-tighter"> Ώۊ ƃZ   N g</h3>
-    </div>
-    <div id="companyTabs" class="flex flex-wrap gap-2"></div>
+  <section class="mb-10 overflow-x-auto pb-4">
+    <div id="companyTabs" class="flex gap-4 min-w-max"></div>
   </section>
 
-  <!-- Dashboard -->
   <div id="dashboardContent" class="hidden">
-    <div class="glass-card rounded-2xl p-8 mb-8 relative overflow-hidden">
-      <div class="scanline"></div>
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-20">
-        <div class="space-y-3">
+    <div class="glass-card rounded-2xl p-8 mb-8 border-l-[12px] border-l-stone-900">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="space-y-2">
           <div class="flex items-center gap-3">
-            <span id="cIndustry" class="text-[10px] font-black px-2 py-1 bg-stone-900 text-white rounded uppercase tracking-widest italic"></span>
-            <span id="cTicker" class="text-[10px] text-stone-400 font-mono italic font-bold"></span>
+            <span id="cIndustry" class="text-[10px] font-black px-2 py-1 bg-rose-100 text-rose-700 rounded uppercase tracking-widest"></span>
+            <span class="text-[10px] text-stone-400 font-mono italic">Case ID: 2026-JP-SCAN</span>
           </div>
-          <h2 id="cName" class="text-6xl font-black italic text-stone-900 tracking-tighter"></h2>
-          <p id="cTagline" class="text-xl font-bold text-red-600 italic border-l-4 border-red-600 pl-4"></p>
+          <h2 id="cName" class="text-5xl font-black italic text-stone-900 tracking-tighter"></h2>
+          <p id="cTagline" class="text-lg font-bold text-rose-600 italic"></p>
         </div>
-        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 shadow-sm text-center min-w-[220px]">
-          <p class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1 italic">Partnership Integrity</p>
-          <div id="cAuditStatus" class="text-4xl font-black italic text-stone-900 tracking-widest uppercase">SCANNING</div>
+        <div class="bg-stone-50 p-6 rounded-xl border border-stone-200 text-center min-w-[160px]">
+          <p class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1">Total Trust Score</p>
+          <div id="cTotalScore" class="text-4xl font-black italic text-stone-900">--</div>
+          <div class="w-full bg-stone-200 h-1 mt-2 rounded-full overflow-hidden">
+            <div id="scoreBar" class="bg-rose-600 h-full transition-all duration-1000"></div>
+          </div>
         </div>
+      </div>
+      <div class="mt-6 pt-6 border-t border-stone-100">
+        <p id="cSummary" class="text-stone-600 leading-relaxed font-medium"></p>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      <div class="lg:col-span-1 space-y-8">
-        <section class="bg-stone-900 text-stone-100 rounded-3xl p-6 shadow-2xl h-full border-t-4 border-red-600">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-sm font-black text-red-500 italic uppercase tracking-tight flex items-center gap-2">
-              <span class="animate-ping w-2 h-2 rounded-full bg-red-500 inline-block"></span> Watcher Live Feed
-            </h3>
-          </div>
-          <div id="scrapingLogs" class="space-y-4 font-mono text-[10px] overflow-y-auto max-h-[600px] log-scroll">
-          </div>
-        </section>
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <section class="glass-card rounded-2xl p-8">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="text-lg font-black text-stone-800 italic uppercase tracking-tight flex items-center gap-2">
+            &#128200; 4-Axis Maturity Audit
+          </h3>
+          <span class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Against JP Industry Avg</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </section>
 
-      <div class="lg:col-span-3 space-y-8">
-        <section class="glass-card rounded-3xl p-8">
-          <div class="flex items-center justify-between mb-8">
-            <h3 class="text-xl font-black text-stone-900 italic uppercase tracking-tight">
-              <span class="text-red-600">??</span> Co-Creation Insight KPI
-            </h3>
-          </div>
-          <div id="kpiMonitor" class="space-y-10">
-          </div>
-        </section>
-      </div>
+      <section class="flex flex-col gap-6">
+        <div class="glass-card rounded-2xl p-8 flex-1">
+          <h3 class="text-lg font-black text-stone-800 italic uppercase tracking-tight mb-6 flex items-center gap-2">
+            &#128101; Critical Management KPIs
+          </h3>
+          <div id="kpiGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </div>
+        
+        <div class="bg-stone-900 text-stone-100 rounded-2xl p-8 flex-1 shadow-xl">
+          <h3 class="text-lg font-black text-rose-500 italic uppercase tracking-tight mb-6 flex items-center gap-2">
+            &#9888; Intelligence Log (Events)
+          </h3>
+          <div id="evidenceTimeline" class="space-y-4"></div>
+        </div>
+      </section>
     </div>
   </div>
 </main>
 
+<footer class="py-12 border-t border-stone-200 text-center">
+  <p class="text-[10px] font-black text-stone-400 uppercase tracking-[0.8em]">End of Surveillance Record / Confidential Intelligence</p>
+</footer>
+
 <script>
-const categories = [
-  { id: 'mgmt', label: '1.  o c   l (Profit & Purpose)', class: 'cat-mgmt', items: ['1 l      ̉c Ɨ  v  ', '   ㍂ c Ɨ  v  ', '     J    ', ' l I   {     z'] },
-  { id: 'hr', label: '2.    n l   (Human Capital)', class: 'cat-hr', items: [' E       x', ' G   Q [ W     g X R A(eNPS)', '3 N   E  ', '   ϋ  ^', ' J     z  ', '    o     X(Pay Ratio)'] },
-  { id: 'div', label: '3.    l   ̋P   (Diversity)', class: 'cat-div', items: ['     Ǘ  E 䗦', ' j   ʕ  ϋ  ^ o     X', '   S E   N   i    '] },
-  { id: 'comp', label: '4.  Љ I       (Trust & Governance)', class: 'cat-comp', items: ['       X R A', ' l   f   [ f   W F   X', '   n v   W F N g  '] },
-  { id: 'prod', label: ' T D   i E   i E T [ r X ̎Љ ]  ', class: 'cat-prod', items: ['SDGs v  ', ' T v   C ` F [        ', '   v  '] }
-];
-
 const db = [
-  { id: 'toyota', name: ' g   ^      ', ticker: '7203', industry: '     ԁE   r   e B', tagline: 'Global Mobility Leader' },
-  { id: 'ihi', name: 'IHI', ticker: '7013', industry: ' d H ƁE F  ', tagline: 'Realize your dreams' },
-  { id: 'nec', name: 'NEC', ticker: '6701', industry: 'ICT E d q @  ', tagline: 'Orchestrating a brighter world' },
-  { id: 'daikin', name: ' _ C L   H  ', ticker: '6367', industry: ' 󒲁E   w', tagline: 'Perfecting the Air' },
-  { id: 'khi', name: '   d H  ', ticker: '7012', industry: ' d H ƁE   n C   t  ', tagline: 'Changing Forward' },
-  { id: 'fujitsu', name: ' x m  ', ticker: '6702', industry: 'IT E T [ r X', tagline: 'Make the world more sustainable' },
-  { id: 'hitachi', name: '       쏊', ticker: '6501', industry: '     e b N', tagline: 'Inspire the Next' },
-  { id: 'mol', name: '   D O  ', ticker: '9104', industry: ' C ^ E   W X e B N X', tagline: 'Blue Action for the Future' },
-  { id: 'panasonic', name: ' p i \ j b NHD', ticker: '6752', industry: '     G   N g   j N X', tagline: 'Live Your Best' },
-  { id: 'keyence', name: ' L [ G   X', ticker: '6861', industry: '     @  E      ', tagline: 'Highest Value Creation' },
-  { id: 'mhi', name: ' O H d H  ', ticker: '7011', industry: ' d H ƁE G l   M [', tagline: 'Move the World Forward' },
-  { id: 'nichirei', name: ' j `   C', ticker: '2871', industry: ' H i E R [   h ` F [  ', tagline: 'Supporting Life' },
-  { id: 'sanki', name: ' O @ H  ', ticker: '1961', industry: ' ݔ  E    ', tagline: 'Engineering for Social Infrastructure' },
-  { id: 'mixi', name: 'MIXI', ticker: '2121', industry: 'IT E l b g T [ r X', tagline: 'Communication & Entertainment' },
-  { id: 'kirin', name: ' L    HD', ticker: '2503', industry: '     E w   X T C G   X', tagline: 'Joy bringing and Health' },
-  { id: 'suntory', name: ' T   g   [HD', ticker: 'PRIVATE', industry: '     E H i', tagline: 'Yatte Minahare' },
-  { id: 'mitsui_fudosan', name: ' O  s   Y', ticker: '8801', industry: ' X Â   E s   Y', tagline: '& Earth' },
-  { id: 'bic', name: ' r b N J    ', ticker: '3048', industry: '     E   C t X ^ C  ', tagline: '  含 Ɛ i   ̐i  ' },
-  { id: 'mercari', name: '     J  ', ticker: '4385', industry: 'IT EC2C T [ r X', tagline: 'Circulate all value' },
-  { id: 'rohto', name: '   [ g    ', ticker: '4527', industry: '   i E w   X P A', tagline: 'Connect for Well-being' },
-  { id: 'nidec', name: ' j f b N', ticker: '6594', industry: '     @  E   [ ^ [', tagline: 'World No.1 Motor Manufacturer' },
-  { id: 'shimadzu', name: '   Ð  쏊', ticker: '7701', industry: '     v   E    ', tagline: 'Excellence in Science' }
+  {
+    id: 'toyota',
+    name: 'トヨタ自動車',
+    industry: '自動車・モビリティ',
+    tagline: 'マルチパスウェイで挑む、移動の王道。',
+    summary: '全方位戦略（マルチパスウェイ）を掲げ、BEV、HEV、FCEVなど多様な選択肢を提示。日本最大のサプライチェーンを抱えるため、その脱炭素化と人的資本の底上げが日本経済全体のSDGs達成に直結する。',
+    scores: [95, 88, 92, 96], // SDGs, Human, Report, Governance
+    avg: [75, 70, 78, 80],
+    kpis: [
+      { label: 'BEV販売目標(2030)', val: '350万台', status: 'neutral', detail: '加速する変革' },
+      { label: '教育研修費/人', val: '28.5万円', status: 'good', detail: '日本最高水準' },
+      { label: 'CO2削減(生産)', val: '-45%', status: 'good', trend: 'down', detail: '2013年比' },
+      { label: '女性管理職比率', val: '4.2%', status: 'bad', detail: '製造業の課題' }
+    ],
+    logs: [
+      { date: '2024/02/14', type: 'REPORT', text: '「幸せの量産」を定義する統合報告書の公開', source: 'IR Office' },
+      { date: '2023/12/20', type: 'ALERT', text: 'グループ企業の型式指定不正に関するガバナンス是正', source: '国土交通省' },
+      { date: '2023/06/01', type: 'INFO', text: '全固体電池の2027年実用化計画を発表', source: 'Nikkei News' }
+    ]
+  },
+  {
+    id: 'nidec',
+    name: 'NIDEC (ニデック)',
+    industry: '精密機器・モーター',
+    tagline: '回るもの、動くもの。すべてを省エネに。',
+    summary: '「高効率モーターで世界の消費電力を減らす」という明確なSDGsミッションを持つ。創業者イズムによる猛烈な成長から、プロ経営者体制への移行と人的資本管理の近代化が現在の焦点。',
+    scores: [92, 65, 75, 82],
+    avg: [70, 72, 75, 75],
+    kpis: [
+      { label: 'e-Axle市場シェア', val: '27%', status: 'good', detail: 'EV成長の核' },
+      { label: '残業時間削減率', val: '-15%', status: 'neutral', detail: '働き方改革中' },
+      { label: '特許保有数', val: '2.5万件', status: 'good', detail: '技術的優位' },
+      { label: '再生エネ導入率', val: '42%', status: 'neutral', detail: '目標 100%' }
+    ],
+    logs: [
+      { date: '2024/01/10', type: 'INFO', text: '工作機械事業の統合による生産効率の最適化', source: 'Company Release' },
+      { date: '2023/09/15', type: 'ALERT', text: '経営承継計画（後継者育成）の透明性確保の要請', source: '機関投資家' }
+    ]
+  },
+  {
+    id: 'shimadzu',
+    name: '島津製作所',
+    industry: '精密計測・医療機器',
+    tagline: '科学技術で「人と地球」を健康にする。',
+    summary: '計測技術で環境汚染や疾病を可視化。京都を代表する名門企業として、極めて誠実な情報開示と、安定した人的資本投資（高い定着率）を誇る。技術と倫理の融合体。',
+    scores: [88, 94, 98, 92],
+    avg: [70, 72, 75, 75],
+    kpis: [
+      { label: 'R&D投資比率', val: '11.5%', status: 'good', detail: '持続的革新' },
+      { label: '離職率', val: '1.8%', status: 'good', detail: '極めて高い定着' },
+      { label: '環境貢献製品比率', val: '65%', status: 'good', detail: '事業そのものがSDGs' },
+      { label: '外部取締役比率', val: '44%', status: 'good', detail: 'ガバナンス成熟' }
+    ],
+    logs: [
+      { date: '2024/03/01', type: 'AWARD', text: '健康経営銘柄2024に選定', source: '経済産業省' },
+      { date: '2023/11/20', type: 'REPORT', text: 'PFAS（永遠の化学物質）計測技術の高度化成果', source: '学術会議' }
+    ]
+  },
+  {
+    id: 'rohto',
+    name: 'ロート製薬',
+    industry: '医薬品・化粧品',
+    tagline: '「Well-being」を社会実装する挑戦者。',
+    summary: '副業解禁や社内起業など、日本で最も進んだ人的資本経営を実践。単なる製薬会社から、食や再生医療を含む「ウェルビーイング」企業へと自己変革を続けている。',
+    scores: [85, 98, 90, 88],
+    avg: [65, 70, 72, 75],
+    kpis: [
+      { label: '副業実施率', val: '22%', status: 'good', detail: '多様なキャリア' },
+      { label: '社外活動推奨', val: '公認済', status: 'good', detail: 'Connect Design' },
+      { label: '再生医療投資', val: '150億円', status: 'good', detail: '未来の医療' },
+      { label: 'プラ容器削減率', val: '-20%', status: 'neutral', detail: 'リフィル推進' }
+    ],
+    logs: [
+      { date: '2024/02/01', type: 'INFO', text: '「ロートWell-beingレポート」における非財務指標の充実', source: 'Annual Report' },
+      { date: '2023/10/05', type: 'AWARD', text: '人的資本経営グランプリ特別賞', source: '日経BP' }
+    ]
+  }
 ];
 
-let scrapedData = {};
-let currentInterval = null;
-
-const mockMaster = {
-  'toyota': { 
-    '1 l      ̉c Ɨ  v  ': '524   ~', '   ㍂ c Ɨ  v  ': '11.8%', '   ϋ  ^': '895   ~',
-    'SDGs v  ': 'A+', ' T v   C ` F [        ': 'High', '   v  ': '92%',
-    'authorComment': '' 
-  },
-  'ihi': { 
-    '1 l      ̉c Ɨ  v  ': '210   ~', '   ϋ  ^': '830   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'Medium', '   v  ': '65%',
-    'authorComment': ''
-  },
-  'nec': { 
-    '1 l      ̉c Ɨ  v  ': '245   ~', ' l I   {     z': '120   ~',
-    'SDGs v  ': 'B+', ' T v   C ` F [        ': 'High', '   v  ': '80%',
-    'authorComment': ''
-  },
-  'daikin': { 
-    '1 l      ̉c Ɨ  v  ': '420   ~', '   ㍂ c Ɨ  v  ': '10.2%',
-    'SDGs v  ': 'S', ' T v   C ` F [        ': 'Medium', '   v  ': '74%',
-    'authorComment': ''
-  },
-  'keyence': { 
-    '1 l      ̉c Ɨ  v  ': '1  2000   ~', '   ㍂ c Ɨ  v  ': '54.1%',
-    'SDGs v  ': 'B', ' T v   C ` F [        ': 'High', '   v  ': '40%',
-    'authorComment': ''
-  },
-  'khi': {
-    '1 l      ̉c Ɨ  v  ': '290   ~', '   ϋ  ^': '850   ~',
-    'SDGs v  ': 'A-', ' T v   C ` F [        ': 'Medium', '   v  ': '78%',
-    'authorComment': ''
-  },
-  'fujitsu': {
-    ' l I   {     z': '180   ~', '   ϋ  ^': '920   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '85%',
-    'authorComment': ''
-  },
-  'hitachi': {
-    '1 l      ̉c Ɨ  v  ': '410   ~', '   ϋ  ^': '915   ~',
-    'SDGs v  ': 'AA', ' T v   C ` F [        ': 'High', '   v  ': '88%',
-    'authorComment': ''
-  },
-  'mol': {
-    '1 l      ̉c Ɨ  v  ': '2200   ~', '   ϋ  ^': '1100   ~',
-    'SDGs v  ': 'A+', ' T v   C ` F [        ': 'Medium', '   v  ': '83%',
-    'authorComment': ''
-  },
-  'panasonic': {
-    '1 l      ̉c Ɨ  v  ': '380   ~', '   ϋ  ^': '810   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '81%',
-    'authorComment': ''
-  },
-  'mhi': {
-    '     J    ': '2200   ~', '   ϋ  ^': '910   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '72%',
-    'authorComment': ''
-  },
-  'nichirei': {
-    '1 l      ̉c Ɨ  v  ': '280   ~', '   ϋ  ^': '750   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '89%',
-    'authorComment': ''
-  },
-  'sanki': {
-    '1 l      ̉c Ɨ  v  ': '210   ~', '   ϋ  ^': '880   ~',
-    'SDGs v  ': 'A-', ' T v   C ` F [        ': 'Medium', '   v  ': '76%',
-    'authorComment': ''
-  },
-  'mixi': {
-    '   ㍂ c Ɨ  v  ': '15.2%', '   ϋ  ^': '720   ~',
-    'SDGs v  ': 'B', ' T v   C ` F [        ': 'High', '   v  ': '68%',
-    'authorComment': ''
-  },
-  'kirin': {
-    ' l I   {     z': '85   ~', '   ϋ  ^': '940   ~',
-    'SDGs v  ': 'A+', ' T v   C ` F [        ': 'High', '   v  ': '87%',
-    'authorComment': ''
-  },
-  'suntory': {
-    '   ㍂ c Ɨ  v  ': '9.8%', '   ϋ  ^': '1050   ~ (    )',
-    'SDGs v  ': 'S', ' T v   C ` F [        ': 'High', '   v  ': '91%',
-    'authorComment': ''
-  },
-  'mitsui_fudosan': {
-    '1 l      ̉c Ɨ  v  ': '4500   ~', '   ϋ  ^': '1280   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'Medium', '   v  ': '80%',
-    'authorComment': ''
-  },
-  'bic': {
-    '   ㍂ c Ɨ  v  ': '2.8%', '   ϋ  ^': '450   ~',
-    'SDGs v  ': 'B+', ' T v   C ` F [        ': 'Medium', '   v  ': '70%',
-    'authorComment': ''
-  },
-  'mercari': {
-    '   ϋ  ^': '920   ~', '     Ǘ  E 䗦': '18.5%',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '86%',
-    'authorComment': ''
-  },
-  'rohto': {
-    '     Ǘ  E 䗦': '22.0%', '   ϋ  ^': '780   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'Medium', '   v  ': '84%',
-    'authorComment': ''
-  },
-  'nidec': {
-    '1 l      ̉c Ɨ  v  ': '210   ~', '   ϋ  ^': '640   ~',
-    'SDGs v  ': 'A-', ' T v   C ` F [        ': 'Medium', '   v  ': '75%',
-    'authorComment': ''
-  },
-  'shimadzu': {
-    '1 l      ̉c Ɨ  v  ': '480   ~', '   ϋ  ^': '820   ~',
-    'SDGs v  ': 'A', ' T v   C ` F [        ': 'High', '   v  ': '82%',
-    'authorComment': ''
-  }
-};
+let radarChart = null;
 
 function initApp() {
   const tabsContainer = document.getElementById('companyTabs');
   db.forEach(company => {
     const btn = document.createElement('button');
-    btn.className = 'tab-btn border-2 px-6 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase shadow-sm transition-all italic';
+    btn.className = 'tab-btn border-2 px-8 py-3 rounded-xl text-xs font-black tracking-widest uppercase shadow-sm whitespace-nowrap';
     btn.innerText = company.name;
     btn.onclick = () => loadCompany(company.id, btn);
     tabsContainer.appendChild(btn);
@@ -357,7 +209,6 @@ function initApp() {
 }
 
 function loadCompany(id, btnElement) {
-  if (currentInterval) clearInterval(currentInterval);
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btnElement.classList.add('active');
 
@@ -366,100 +217,96 @@ function loadCompany(id, btnElement) {
 
   document.getElementById('dashboardContent').classList.remove('hidden');
   document.getElementById('cIndustry').innerText = company.industry;
-  document.getElementById('cTicker').innerText = company.ticker === 'PRIVATE' ? 'Source: Private Disclosure' : `Ticker: ${company.ticker}.T`;
   document.getElementById('cName').innerText = company.name;
   document.getElementById('cTagline').innerText = company.tagline;
-  document.getElementById('cAuditStatus').innerText = 'WATCHING';
-  document.getElementById('cAuditStatus').className = 'text-4xl font-black italic text-stone-400 animate-pulse uppercase tracking-widest';
+  document.getElementById('cSummary').innerText = company.summary;
+  
+  const total = Math.round(company.scores.reduce((a,b)=>a+b,0)/4);
+  document.getElementById('cTotalScore').innerText = total;
+  document.getElementById('scoreBar').style.width = total + '%';
 
-  renderMonitor(id);
-  simulateScraping(id);
+  updateRadarChart(company.name, company.scores, company.avg);
+  renderKPIs(company.kpis);
+  renderEvidence(company.logs);
 }
 
-function renderMonitor(companyId) {
-  const container = document.getElementById('kpiMonitor');
-  container.innerHTML = '';
-  const data = scrapedData[companyId] || {};
+function updateRadarChart(name, scores, avgScores) {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  if (radarChart) radarChart.destroy();
 
-  categories.forEach(cat => {
-    const section = document.createElement('div');
-    const isProductCategory = cat.id === 'prod';
-    
-    section.innerHTML = `
-      <div class="flex items-center gap-2 mb-6">
-        <span class="category-tag ${cat.class}">${cat.label}</span>
-        <div class="flex-1 h-[1px] bg-stone-100"></div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        ${cat.items.map(item => {
-          const val = data[item] || null;
-          return `
-            <div class="kpi-card bg-stone-50 p-4 rounded-xl border border-stone-100 ${!val ? 'skeleton-glow opacity-40' : ''}">
-              <div>
-                <div class="text-[9px] font-black text-stone-400 uppercase tracking-tighter mb-1">${item}</div>
-                ${val ? `<div class="text-[8px] text-red-600 font-black uppercase tracking-widest mb-2 flex items-center gap-1 italic">? Verified</div>` : ''}
-              </div>
-              <div class="text-xl font-black ${val ? 'text-stone-900' : 'text-stone-300'} italic">
-                ${val ? val : 'WATCHING...'}
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-      ${isProductCategory ? `
-        <div class="comment-box shadow-sm mb-10">
-          <p class="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 italic">    M ҃R     g / Watcher's Critique</p>
-          <textarea 
-            class="w-full bg-transparent border-0 focus:ring-0 text-sm text-stone-700 leading-relaxed font-bold italic resize-none h-24 outline-none placeholder-stone-400" 
-            placeholder="     ɓƎ  ̕]   R     g  L     Ă        B R [ h G f B ^ Œ  ڏ      ނ  Ƃ A   ̏ ŉ        邱 Ƃ \ ł  B"
-            oninput="updateComment('${companyId}', this.value)"
-          >${data.authorComment || ''}</textarea>
-        </div>
-      ` : ''}
-    `;
-    container.appendChild(section);
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['SDGs・環境', '人的資本', '情報開示', '倫理・統治'],
+      datasets: [{
+        label: name,
+        data: scores,
+        backgroundColor: 'rgba(225, 29, 72, 0.2)',
+        borderColor: 'rgba(225, 29, 72, 1)',
+        pointBackgroundColor: '#e11d48',
+        borderWidth: 3
+      }, {
+        label: '業界平均',
+        data: avgScores,
+        backgroundColor: 'rgba(120, 113, 108, 0.1)',
+        borderColor: 'rgba(120, 113, 108, 0.4)',
+        borderDash: [5, 5],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { display: false },
+          grid: { color: '#e7e5e4' },
+          angleLines: { color: '#e7e5e4' },
+          pointLabels: { font: { size: 12, weight: '900' }, color: '#1c1917' }
+        }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { weight: 'bold' }, padding: 20 } }
+      }
+    }
   });
 }
 
-// Handler to update the active comment in the local state
-function updateComment(companyId, value) {
-  if (!scrapedData[companyId]) scrapedData[companyId] = {};
-  scrapedData[companyId].authorComment = value;
-  if (mockMaster[companyId]) {
-    mockMaster[companyId].authorComment = value;
-  }
+function renderKPIs(kpis) {
+  const container = document.getElementById('kpiGrid');
+  container.innerHTML = '';
+  kpis.forEach(kpi => {
+    const card = document.createElement('div');
+    card.className = 'bg-stone-50 border border-stone-200 p-5 rounded-xl hover:border-rose-300 transition-colors';
+    let statusClass = 'status-neutral';
+    if (kpi.status === 'good') statusClass = 'status-good';
+    else if (kpi.status === 'bad') statusClass = 'status-bad';
+
+    card.innerHTML = `
+      <div class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2">${kpi.label}</div>
+      <div class="text-2xl font-black text-stone-900 italic mb-2">${kpi.val}</div>
+      <div class="inline-block text-[9px] font-black px-2 py-0.5 rounded ${statusClass} uppercase tracking-tighter">${kpi.detail}</div>
+    `;
+    container.appendChild(card);
+  });
 }
 
-function simulateScraping(companyId) {
-  const logs = document.getElementById('scrapingLogs');
-  logs.innerHTML = '';
-  document.getElementById('cAuditStatus').innerText = 'WATCHING';
-  
-  const steps = ["Establishing connection...", "Intercepting data...", "Verifying integrity...", "Analysis complete."];
-  let step = 0;
-  currentInterval = setInterval(() => {
-    if (step < steps.length) {
-      const entry = document.createElement('div');
-      entry.className = 'text-stone-500 border-l border-stone-700 pl-3 py-1';
-      entry.innerHTML = `<span class="text-red-600 mr-2">></span> ${steps[step]}`;
-      logs.prepend(entry);
-      step++;
-    } else {
-      clearInterval(currentInterval);
-      finalizeData(companyId);
-    }
-  }, 400);
-}
-
-function finalizeData(companyId) {
-  scrapedData[companyId] = mockMaster[companyId] || {
-    '1 l      ̉c Ɨ  v  ': '  ͒ ...',
-    'authorComment': ''
-  };
-  
-  renderMonitor(companyId);
-  document.getElementById('cAuditStatus').innerText = 'TRUSTED';
-  document.getElementById('cAuditStatus').className = 'text-4xl font-black italic text-red-600 uppercase tracking-widest';
+function renderEvidence(logs) {
+  const container = document.getElementById('evidenceTimeline');
+  container.innerHTML = '';
+  logs.forEach(log => {
+    const item = document.createElement('div');
+    item.className = 'p-4 bg-stone-800 rounded-xl border border-stone-700 hover:border-rose-500 transition-all';
+    item.innerHTML = `
+      <div class="flex justify-between items-center mb-1">
+        <span class="text-[9px] text-stone-500 font-mono">${log.date}</span>
+        <span class="text-[8px] px-1.5 py-0.5 bg-rose-900/30 text-rose-400 rounded font-black tracking-widest uppercase">${log.type}</span>
+      </div>
+      <p class="text-sm font-bold text-stone-100 mb-1">${log.text}</p>
+      <p class="text-[10px] text-stone-500 italic">Source: ${log.source}</p>
+    `;
+    container.appendChild(item);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
